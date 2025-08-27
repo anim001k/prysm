@@ -14,11 +14,13 @@ go_library(
         "roblock.go",
         "rodatacolumn.go",
         "setters.go",
+        "signed_execution_header.go",
         "types.go",
     ],
     importpath = "github.com/OffchainLabs/prysm/v6/consensus-types/blocks",
     visibility = ["//visibility:public"],
     deps = [
+        "//beacon-chain/core/signing:go_default_library",
         "//beacon-chain/state/stateutil:go_default_library",
         "//config/fieldparams:go_default_library",
         "//config/params:go_default_library",

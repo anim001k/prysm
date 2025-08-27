@@ -190,7 +190,7 @@ func TestBlobsErrorHandling(t *testing.T) {
 
 	t.Run("non-existent block by slot returns 404", func(t *testing.T) {
 		blocker := &BeaconDbBlocker{
-			BeaconDB: db,
+			BeaconDB:         db,
 			ChainInfoFetcher: &mockChain.ChainService{},
 		}
 
@@ -262,7 +262,7 @@ func TestBlobsErrorHandling(t *testing.T) {
 		predenebBlock := util.NewBeaconBlock()
 		predenebBlock.Block.Slot = 100
 		util.SaveBlock(t, ctx, db, predenebBlock)
-		
+
 		// Create blocker without ChainInfoFetcher to trigger internal error when checking canonical status
 		blocker := &BeaconDbBlocker{
 			BeaconDB: db,
