@@ -183,19 +183,12 @@ func (s *Service) validateWithKzgBatchVerifier(ctx context.Context, dataColumns 
 func (s *Service) validateUnbatchedColumnsKzg(ctx context.Context, columns []blocks.RODataColumn) (pubsub.ValidationResult, error) {
 	_, span := trace.StartSpan(ctx, "sync.validateUnbatchedColumnsKzg")
 	defer span.End()
-
-	err := peerdas.VerifyDataColumnsSidecarKZGProofs(columns)
-	if err == nil {
-		return pubsub.ValidationAccept, nil
-	}
-
-	if errors.Is(err, peerdas.ErrInvalidKZGProof) {
+	if err := peerdas.VerifyDataColumnsSidecarKZGProofs(columns); err != nil {
+		err = errors.Wrap(err, "could not verify")
+		tracing.AnnotateError(span, err)
 		return pubsub.ValidationReject, err
 	}
-
-	err = errors.Wrap(err, "could not verify")
-	tracing.AnnotateError(span, err)
-	return pubsub.ValidationIgnore, err
+	return pubsub.ValidationAccept, nil
 }
 
 func verifyKzgBatch(kzgBatch []*kzgVerifier) {
