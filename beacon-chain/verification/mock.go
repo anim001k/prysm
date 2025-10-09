@@ -2,6 +2,7 @@ package verification
 
 import (
 	"context"
+	"errors"
 
 	fieldparams "github.com/OffchainLabs/prysm/v6/config/fieldparams"
 	"github.com/OffchainLabs/prysm/v6/consensus-types/blocks"
@@ -30,50 +31,50 @@ func (m *MockBlobVerifier) VerifiedROBlob() (blocks.VerifiedROBlob, error) {
 }
 
 func (m *MockBlobVerifier) BlobIndexInBounds() (err error) {
-	return m.ErrBlobIndexInBounds
+	return errors.Join(ErrSidecarInvalid, m.ErrBlobIndexInBounds)
 }
 
 func (m *MockBlobVerifier) NotFromFutureSlot() (err error) {
-	return m.ErrSlotTooEarly
+	return errors.Join(ErrSidecarInvalid, m.ErrSlotTooEarly)
 }
 
 func (m *MockBlobVerifier) SlotAboveFinalized() (err error) {
-	return m.ErrSlotAboveFinalized
+	return errors.Join(ErrSidecarInvalid, m.ErrSlotAboveFinalized)
 }
 
 func (m *MockBlobVerifier) ValidProposerSignature(_ context.Context) (err error) {
-	return m.ErrValidProposerSignature
+	return errors.Join(ErrSidecarInvalid, m.ErrValidProposerSignature)
 }
 
-func (m *MockBlobVerifier) SidecarParentSeen(_ func([32]byte) bool) (err error) {
-	return m.ErrSidecarParentSeen
+func (m *MockBlobVerifier) SidecarParentSeen(func([fieldparams.RootLength]byte) bool) (err error) {
+	return errors.Join(ErrSidecarInvalid, m.ErrSidecarParentSeen)
 }
 
-func (m *MockBlobVerifier) SidecarParentValid(_ func([32]byte) bool) (err error) {
-	return m.ErrSidecarParentValid
+func (m *MockBlobVerifier) SidecarParentValid(func([fieldparams.RootLength]byte) bool) (err error) {
+	return errors.Join(ErrSidecarInvalid, m.ErrSidecarParentValid)
 }
 
 func (m *MockBlobVerifier) SidecarParentSlotLower() (err error) {
-	return m.ErrSidecarParentSlotLower
+	return errors.Join(ErrSidecarInvalid, m.ErrSidecarParentSlotLower)
 }
 
 func (m *MockBlobVerifier) SidecarDescendsFromFinalized() (err error) {
-	return m.ErrSidecarDescendsFromFinalized
+	return errors.Join(ErrSidecarInvalid, m.ErrSidecarDescendsFromFinalized)
 }
 
 func (m *MockBlobVerifier) SidecarInclusionProven() (err error) {
-	return m.ErrSidecarInclusionProven
+	return errors.Join(ErrSidecarInvalid, m.ErrSidecarInclusionProven)
 }
 
 func (m *MockBlobVerifier) SidecarKzgProofVerified() (err error) {
-	return m.ErrSidecarKzgProofVerified
+	return errors.Join(ErrSidecarInvalid, m.ErrSidecarKzgProofVerified)
 }
 
 func (m *MockBlobVerifier) SidecarProposerExpected(_ context.Context) (err error) {
-	return m.ErrSidecarProposerExpected
+	return errors.Join(ErrSidecarInvalid, m.ErrSidecarProposerExpected)
 }
 
-func (*MockBlobVerifier) SatisfyRequirement(_ Requirement) {}
+func (*MockBlobVerifier) SatisfyRequirement(Requirement) {}
 
 // Data column sidecars
 // --------------------
